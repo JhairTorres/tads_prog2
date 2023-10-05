@@ -2,6 +2,7 @@ package com.tads_prog2.controller;
 
 import com.tads_prog2.controller.dto.ResponseDTO;
 import com.tads_prog2.model.Kid;
+import com.tads_prog2.model.ListSE;
 import com.tads_prog2.model.Node;
 import com.tads_prog2.service.ListSEService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +18,25 @@ import java.util.List;
 public class ListSEController {
     @Autowired
     private ListSEService listSEService;
+
+
+    //getall #1
     @GetMapping
     public ResponseEntity<ResponseDTO> getAll(){
         return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
                 listSEService.getKids().getHead(),null), HttpStatus.OK);
     }
-    @GetMapping(path = "/change_extremes")
-    public ResponseEntity<ResponseDTO> changeExtremes(){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.changeExt(),null),HttpStatus.OK);
-    }
-    @GetMapping(path = "/invert")
-    public ResponseEntity<ResponseDTO> invert(){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.invert(),null),HttpStatus.OK);
-    }
-    @PostMapping
+
+    //Add end #2
+    @PostMapping(path = "/toend")
     public ResponseEntity<String> addEnd(@RequestBody Kid kid){
         // irian las validaciones de la entrada
         listSEService.getKids().addEnd(kid);
         return new ResponseEntity<String>(
                 "Adicionado exitosamente", HttpStatus.OK);
     }
+
+    //Add start #3
     @PostMapping(path = "/tostart")
     public ResponseEntity<String> addToStart(@RequestBody Kid kid){
         // irian las validaciones de la entrada
@@ -46,32 +44,52 @@ public class ListSEController {
         return new ResponseEntity<String>(
                 "Adicionado exitosamente", HttpStatus.OK);
     }
-   @DeleteMapping(path="/deletepos/{posicion}")
-   public ResponseEntity<ResponseDTO> deleteInPos(@PathVariable int pos){
-       String output = listSEService.deletePos(pos);
 
-       if (output.equals("Fuera de rango")){
-           List<String> errors = new ArrayList<>();
-           errors.add(output);
-           return new ResponseEntity<>(new ResponseDTO(HttpStatus.BAD_REQUEST.value(),
-                   null,errors),HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                   output,null),HttpStatus.OK);
-       }
-   }
-    @DeleteMapping(path="/deleteid/{identification}")
-    public  ResponseEntity<String> deleteid(@PathVariable String identification) {
-        // irian las validaciones de la entrada
-        listSEService.getKids().deleteId(identification);
-        return new ResponseEntity<String>(
-                "borrado exitosamente", HttpStatus.OK);
+    //Add Pos #4
+    @PostMapping(path="/topos/{pos}")
+    public ResponseEntity<ResponseDTO> insertInPos(@PathVariable int pos ,@RequestBody Kid kid){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.insertInPos(pos, kid),null),HttpStatus.OK);
     }
+
+    //Invert #5
+    @GetMapping(path = "/invert")
+    public ResponseEntity<ResponseDTO> invert(){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.invert(),null),HttpStatus.OK);
+    }
+
+
+    //Change ext #6
+    @GetMapping(path = "/change_extremes")
+    public ResponseEntity<ResponseDTO> changeExtremes(){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.changeExt(),null),HttpStatus.OK);
+    }
+
+
+    //Delete pos#8
+   @DeleteMapping(path="/deletepos/{posicion}")
+   public ResponseEntity<ResponseDTO> deleteInPos(@PathVariable int posicion){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.deletePos(posicion),null),HttpStatus.OK);
+   }
+
+
+
+   //Delete Id #9
+    @DeleteMapping(path="/deleteid/{identification}")
+    public  ResponseEntity<ResponseDTO> deleteid(@PathVariable String identification) {
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.deleteId(identification),null),HttpStatus.OK);
+    }
+
+
+    //Update in Pos #10
     @PutMapping(path="/updateinpos/{posicion}")
-    public ResponseEntity<String> updateInPos(@PathVariable int posicion,@RequestBody Kid kid){
-        listSEService.getKids().updateInPos(posicion,kid);
-        return new ResponseEntity<String>(
-                "actualizado exitosamente", HttpStatus.OK);
+    public ResponseEntity<ResponseDTO> updateInPos(@PathVariable int posicion,@RequestBody Kid kid){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.updateInPos(posicion, kid),null),HttpStatus.OK);
     }
 
 }

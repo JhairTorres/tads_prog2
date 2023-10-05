@@ -23,25 +23,40 @@ public class ListSEService {
 
     }
 
+    //Add Pos#4
+    public String insertInPos(int pos,Kid kid){
+        kids.insertInPos(pos, kid);
+        return "Insertado";
+    }
+
+
+    //Invert#5
     public String invert(){
         kids.invert();
         return "Invertido";
     }
+
+    //Change Ext #6
     public String changeExt(){
         kids.changeExt();
         return "Invertidos";
     }
-    public String updateInPos(byte pos, Kid kid){
+    //delete pos #8
+    public String deletePos(int posicion){
+        kids.deletePos(posicion);
+        return "Borrado";
+    }
+
+    //delete id #9
+    public String deleteId(String identification){
+        kids.deleteId(identification);
+        return "borrado";
+    }
+
+    //Update in pos #10
+    public String updateInPos(int pos, Kid kid){
         kids.updateInPos(pos,kid);
         return "Actualizado";
-    }
-    public String deletePos(int pos){
-        try {
-            kids.deletePos(pos);
-            return "Eliminado";
-        } catch (KidsException e) {
-            return e.getMessage();
-        }
     }
 
 }
