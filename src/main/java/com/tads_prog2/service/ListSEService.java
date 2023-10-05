@@ -15,11 +15,11 @@ public class ListSEService {
         // simular que lei un archivo o una base de datos
         kids = new ListSE();
         kids.addEnd(new Kid("1005085752","Valeria Osorio"
-                , (byte) 20));
+                , (byte) 20,"Femenino") );
         kids.addEnd(new Kid("356373763","Jhair Torres"
-                , (byte) 18));
+                , (byte) 18,"Masculino"));
         kids.addEnd(new Kid("4554544554","Sergio Núñez"
-                , (byte) 19));
+                , (byte) 19,"Masculino"));
 
     }
 
