@@ -41,6 +41,12 @@ public class ListSEService {
         kids.changeExt();
         return "Invertidos";
     }
+
+    //intercaladegender #7
+    public String intercalateGender(){
+        kids.intercalateByGender();
+        return "Intercalados";
+    }
     //delete pos #8
     public String deletePos(int posicion){
         kids.deletePos(posicion);

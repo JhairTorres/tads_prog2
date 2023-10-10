@@ -99,6 +99,33 @@ public class ListSE {
     }
 
 
+
+    // Intercalate Gender #7
+    public void intercalateByGender() {
+        if (this.head == null) {
+            throw new IndexOutOfBoundsException("Lista vacía");
+        } else if (this.head.getNext() == null) {
+            throw new IndexOutOfBoundsException("Insuficientes elementos");
+        } else {
+            ListSE listCopy = new ListSE();
+            Node temp = this.head;
+            int posHombre = 1;
+            int posMujer = 2;
+            while (temp != null) {
+                if (temp.getData().getGender().equals("hombre")) {
+                    listCopy.insertInPos(posHombre, temp.getData());
+                    posHombre = posHombre + 2;
+                } else if (temp.getData().getGender().equals("mujer")) {
+                    listCopy.insertInPos(posMujer, temp.getData());
+                    posMujer = posMujer + 2;
+                }
+                temp = temp.getNext();
+            }
+            this.head = listCopy.getHead();
+        }
+    }
+
+
     //Delete Pos #8
     public void deletePos(int posicion) {
         if (posicion < 0 || posicion >= size) {

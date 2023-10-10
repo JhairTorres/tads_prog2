@@ -67,6 +67,13 @@ public class ListSEController {
                 listSEService.changeExt(),null),HttpStatus.OK);
     }
 
+    //Intercalate Gender #7
+    @GetMapping(path = "/intercalateByGender")
+    public ResponseEntity<ResponseDTO> intercalateKidsByGender() {
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listSEService.intercalateGender(),null),HttpStatus.OK);
+    }
+
 
     //Delete pos#8
    @DeleteMapping(path="/deletepos/{posicion}")
