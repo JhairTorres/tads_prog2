@@ -5,10 +5,12 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
-public class ResponseDTO {
-    private int code;
-    Object data;
-    List<String> error;
+@Data
+public class DataStructureDTO {
+    private String City;
+    private int quantity;
+    private List<GenderStructureDTO> gender;
+
+
 }

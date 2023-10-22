@@ -1,72 +1,79 @@
 package com.tads_prog2.model;
 
+import com.tads_prog2.controller.dto.DataStructureDTO;
+import com.tads_prog2.controller.dto.GenderStructureDTO;
 import com.tads_prog2.exceptions.KidsException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
+@Data
 public class ListSE {
     private Node head;
     private int size;
 
-    //Add End #2
-    public void addEnd(Kid kid){
-        // Verificamos si hay datos
-        if(this.head ==null){
-            //No hay datos
-            this.head = new Node(kid);
-        }
-        else {
-            Node temp = this.head;
-            while(temp.getNext()!= null){
-                temp = temp.getNext();
+    //ADD TO THE END
+
+    public void addKidToEnd(Kid kid){
+
+        //verificamos si hay datos en la cabeza
+
+        if(this.head==null){
+            this.head = new Node(kid) ;
+        }else {
+            //LLAMAR A AYUDANTE
+            Node tempNode =this.head;
+            while
+            (tempNode.getNext()!=null){
+                tempNode=tempNode.getNext();
             }
-            temp.setNext(new Node(kid));
-        }
-        this.size ++;
+            //Node newnode = new Node(kid);
+            //tempNode.setNext(newnode);
+            tempNode.setNext(new Node(kid));
 
+        }
+        this.size++;
     }
 
-
-    //Add start #3
+    //ADD TO START
     public void addToStart(Kid kid){
-        if(this.head ==null){
-            this.head = new Node(kid);
-        }
-        else{
-            Node newNode = new Node(kid);
+        if(this.head==null){
+            this.head = new Node(kid) ;
+        }else {
+            Node newNode = new  Node (kid);
             newNode.setNext(this.head);
-            this.head = newNode;
+            this.head=newNode;
         }
         this.size ++;
     }
-
-
-    //Add Pos #4
-    public void insertInPos(int posicion, Kid kid){
-        if (posicion == 1){
+    //ADD TO POSITION
+    public void addPos(int posicion, Kid kid) {
+        if (posicion==1){
             this.addToStart(kid);
+
         } else if (posicion>this.size) {
-            this.addEnd(kid);
-        } else if (posicion<=this.size) {
+            this.addKidToEnd(kid);
+
+        }else if (posicion <= this.size) {
             Node temp = this.head;
             int posAct = 1;
-            while (posAct<posicion-1){
+            while (posAct < posicion - 1) {
                 temp = temp.getNext();
                 posAct++;
             }
             Node newNode = new Node(kid);
             newNode.setNext(temp.getNext());
             temp.setNext(newNode);
-            size++;
+            this.size++;
         }
 
+
     }
+    //INVERTIR LA LISTA
 
-
-    //invert #5
     public void invert() {
         //Hay datos?
         if (this.head != null) {
@@ -83,108 +90,95 @@ public class ListSE {
             this.head = listCopy.getHead();
         }
     }
-
-
-    //Change Ext #6
+    //CAMBIAR EXTREMOS
     public void changeExt(){
-        if(size>=2){
-            Kid kidtep = this.head.getData();
-            Node temp = this.head;
-            while (temp.getNext()!=null){
-                temp = temp.getNext();
+        if(this.head !=null){
+            Node temp= this.head;
+            while(temp.getNext()!=null){
+                temp=temp.getNext();
             }
-            this.head.setData(temp.getData());
-            temp.setData(kidtep);
+            Kid lastKid=temp.getData();
+            temp.setData(this.head.getData());
+            this.head.setData(lastKid);
         }
     }
-
-
-
-    // Intercalate Gender #7
-    public void intercalateByGender() {
-        if (this.head == null) {
-            throw new IndexOutOfBoundsException("Lista vacía");
-        } else if (this.head.getNext() == null) {
-            throw new IndexOutOfBoundsException("Insuficientes elementos");
-        } else {
-            ListSE listCopy = new ListSE();
-            Node temp = this.head;
-            int posHombre = 1;
-            int posMujer = 2;
-            while (temp != null) {
-                if (temp.getData().getGender().equals("hombre")) {
-                    listCopy.insertInPos(posHombre, temp.getData());
-                    posHombre = posHombre + 2;
-                } else if (temp.getData().getGender().equals("mujer")) {
-                    listCopy.insertInPos(posMujer, temp.getData());
-                    posMujer = posMujer + 2;
+    //SORTEAR POR GENERO
+    public void sortbyGender() throws KidsException{
+        if(this.head==null){
+            throw new KidsException("Lista vacia");
+        }else if(this.head.getNext()==null){
+            throw new KidsException("Insuficientes elementos");
+        }
+        else{
+            ListSE listcopy=new ListSE();
+            Node temp= this.head;
+            int posMale=1;
+            int posFemale=2;
+            while(temp!=null){
+                if (temp.getData().getGender().equals("Male")){
+                    listcopy.addPos(posMale,temp.getData());
+                    posMale=posMale+2;
+                }else if (temp.getData().getGender().equals("Female")) {
+                    listcopy.addPos(posFemale, temp.getData());
+                    posFemale = posFemale + 2;
                 }
-                temp = temp.getNext();
+                temp=temp.getNext();
             }
-            this.head = listCopy.getHead();
+            this.head=listcopy.getHead();
         }
     }
-
-
-    //Delete Pos #8
-    public void deletePos(int posicion) {
-        if (posicion < 0 || posicion >= size) {
+    //DELETE IN POSITION
+    public void deletePos(int posicion) throws KidsException {
+        if (posicion <= 0 || posicion > this.size) {
             // Verifica si la posición está fuera de rango
-            throw new IndexOutOfBoundsException("La posición está fuera de rango.");
+            throw new KidsException("La posición está fuera de rango.");
         }
-
-        if (posicion == 0) {
+        if (posicion == 1) {
             // Si la posición es 0, actualiza la cabeza para eliminar el primer nodo
-            head = head.getNext();
+            this.head = this.head.getNext();
         } else {
-            Node temp = head;
+            Node temp = this.head;
             int contador = 1;
-
             // Encuentra el nodo anterior al que se va a eliminar
             while (contador < posicion - 1) {
                 temp = temp.getNext();
                 contador++;
             }
-
             // Actualiza las referencias para eliminar el nodo en la posición especificada
             temp.setNext(temp.getNext().getNext());
         }
 
-        size--;
+        this.size--;
     }
-
-
-    //Delete ID #9
-    public void deleteId(String identification) {
+    //DELETE FOR ID
+    public void deleteId(String id) throws KidsException {
         if (this.head == null) {
+            throw new KidsException("Lista Vacia");
             // La lista está vacía, no se puede borrar nada
-            return;
-        } else if (this.head.getData().getIdentification().equals(identification)) {
+        } else if (this.head.getData().getIdentification().equals(id)) {
             // Si la identificación coincide con la de la cabeza, elimina el primer nodo
             this.head = this.head.getNext();
-            size--;
-            return;
-        }
-        Node temp = this.head;
-        while (temp.getNext() != null) {
-            if (temp.getNext().getData().getIdentification().equals(identification)) {
-                // Si encuentra un nodo cuya identificación coincide, actualiza las referencias
-                temp.setNext(temp.getNext().getNext());
-                this.size--;
-                return;
+            this.size--;
+
+        }else{
+            Node temp = this.head;
+            while (temp != null) {
+                if (temp.getNext().getData().getIdentification().equals(id)) {
+                    // Si encuentra un nodo cuya identificación coincide, actualiza las referencias
+                    temp.setNext(temp.getNext().getNext());
+                }
+                temp = temp.getNext();
             }
-            temp = temp.getNext();
+            this.size--;
         }
     }
 
-
-    //Update in Pos #10
     public void updateInPos(int posicion, Kid kid) {
         if(this.head!= null) {
             Node temp = this.head;
             byte currentPos = 0;
             if (posicion > this.size) {
-                this.addEnd(kid);
+                this.addKidToEnd(kid);
             }
             while(temp.getNext()!=null){
                 if(currentPos==posicion){
@@ -196,6 +190,87 @@ public class ListSE {
         }
     }
 
+    public List<String> getCities() {
+        Node temp = this.head;
+        List<String> cities = new ArrayList<>();
 
+        while (temp != null) {
+            String city = temp.getData().getCityname().getCity();
+            if (!cities.contains(city)) {
+                cities.add(city);
+            }
+            temp = temp.getNext();
+        }
 
-}
+        return cities;
+    }
+
+    public List<DataStructureDTO> cityReport() throws KidsException{
+        if(this.head==null){
+            throw new KidsException("Lista vacía");
+        } else {
+            List<String>  cities = this.getCities();
+
+            List<DataStructureDTO> cityReport = new ArrayList<>();
+
+            List<DataStructureDTO> cities_report = new ArrayList<>();
+
+            for(String city :cities){
+                int total_city_count=0;
+                int male_count=0;
+                int female_count =0;
+                Node temp = this.head;
+                while(temp!=null){
+                    if(temp.getData().getCityname().getCity().equals(city)){
+                        System.out.println("------");
+                        System.out.println(temp.getData());
+                        System.out.println("----");
+                        System.out.println(city);
+                        if(temp.getData().getGender().equals("Male")){
+                            System.out.println("Male");
+                            System.out.println("---");
+                            System.out.println(temp.getData());
+                            System.out.println("Previous value: "+male_count);
+                            System.out.println("----");
+                            male_count++;
+                            System.out.println("New male value:  "+male_count);
+                        }
+                        if(temp.getData().getGender().equals("Female")){
+                            System.out.println("Female");
+                            System.out.println("-----");
+                            System.out.println(temp.getData());
+                            System.out.println("Previous value: "+female_count);
+                            System.out.println("-----");
+                            female_count++;
+                            System.out.println("New Female value:  "+female_count);
+                        }
+                        total_city_count++;
+                        System.out.println("New total count in"+city+"-----"+total_city_count);
+                    }
+
+                    temp = temp.getNext();
+                }
+                GenderStructureDTO city_females = new GenderStructureDTO("Female",female_count);
+                GenderStructureDTO city_males = new GenderStructureDTO("Males",male_count);
+                System.out.println(city+"Females in the city  "+ city_females);
+                System.out.println(city+"Males in the city  "+city_males);
+
+                List<GenderStructureDTO> genders = new ArrayList<>();
+                genders.add(city_females);
+                genders.add(city_males);
+
+                DataStructureDTO finalCityReport = new DataStructureDTO(city,total_city_count,genders);
+                System.out.println("----");
+                System.out.println(finalCityReport);
+
+                cities_report.add(finalCityReport);
+            }
+
+            System.out.println("---");
+            System.out.println(cities_report);
+
+            return cities_report;
+        }
+    }
+
+}//fin del public

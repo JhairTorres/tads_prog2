@@ -1,10 +1,13 @@
 package com.tads_prog2.controller;
 
 import com.tads_prog2.controller.dto.ResponseDTO;
+import com.tads_prog2.exceptions.KidsException;
 import com.tads_prog2.model.Kid;
 import com.tads_prog2.model.ListSE;
 import com.tads_prog2.model.Node;
 import com.tads_prog2.service.ListSEService;
+import com.tads_prog2.model.Node;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,89 +17,125 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/listse")
+@RequestMapping(path="/listse")
 public class ListSEController {
     @Autowired
-    private ListSEService listSEService;
+    private ListSEService listaSEService;
 
-
-    //getall #1
     @GetMapping
-    public ResponseEntity<ResponseDTO> getAll(){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.getKids().getHead(),null), HttpStatus.OK);
+    public ResponseEntity<Node> getAll(){
+        return new ResponseEntity<Node>(
+                listaSEService.getKids().getHead(), HttpStatus.OK
+        );
     }
-
-    //Add end #2
-    @PostMapping(path = "/toend")
-    public ResponseEntity<String> addEnd(@RequestBody Kid kid){
+    @PostMapping
+    public ResponseEntity<String> addEnd(@Valid @RequestBody Kid kid){
         // irian las validaciones de la entrada
-        listSEService.getKids().addEnd(kid);
+        listaSEService.getKids().addKidToEnd(kid);
         return new ResponseEntity<String>(
                 "Adicionado exitosamente", HttpStatus.OK);
     }
 
-    //Add start #3
     @PostMapping(path = "/tostart")
-    public ResponseEntity<String> addToStart(@RequestBody Kid kid){
+    public ResponseEntity<String> addToStart(@Valid @RequestBody Kid kid){
         // irian las validaciones de la entrada
-        listSEService.getKids().addToStart(kid);
+        listaSEService.getKids().addToStart(kid);
         return new ResponseEntity<String>(
                 "Adicionado exitosamente", HttpStatus.OK);
     }
-
-    //Add Pos #4
-    @PostMapping(path="/topos/{pos}")
-    public ResponseEntity<ResponseDTO> insertInPos(@PathVariable int pos ,@RequestBody Kid kid){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.insertInPos(pos, kid),null),HttpStatus.OK);
+    @PostMapping(path="/addposition/{posicion}")
+    public ResponseEntity<String> addPos( @Valid @RequestBody Kid kid, @PathVariable int posicion ){
+        if (posicion<1){
+            return new ResponseEntity<>("Posicion no valida",HttpStatus.BAD_REQUEST);
+        }
+        listaSEService.getKids().addPos(posicion, kid);
+        return new ResponseEntity<>(
+                "Adicionado exitosamente",HttpStatus.OK
+        );
     }
 
-    //Invert #5
     @GetMapping(path = "/invert")
     public ResponseEntity<ResponseDTO> invert(){
         return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.invert(),null),HttpStatus.OK);
+                listaSEService.invert(),null),HttpStatus.OK);
     }
 
-
-    //Change ext #6
     @GetMapping(path = "/change_extremes")
-    public ResponseEntity<ResponseDTO> changeExtremes(){
+    public ResponseEntity<ResponseDTO> changeExt(){
         return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.changeExt(),null),HttpStatus.OK);
+                listaSEService.changeExt(),null   ),HttpStatus.OK);
+
     }
+    @GetMapping(path="/sortbygender")
+    public ResponseEntity<ResponseDTO> sortbyGender(){
+        String output= listaSEService.sortbyGender();
+        if (output.equals("Lista vacia")||output.equals("Insuficiente elementos")){
+            List<String> errors =new ArrayList<>();
+            errors.add(output);
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.BAD_REQUEST.value(),
+                    null, errors ),HttpStatus.OK);
 
-    //Intercalate Gender #7
-    @GetMapping(path = "/intercalateByGender")
-    public ResponseEntity<ResponseDTO> intercalateKidsByGender() {
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.intercalateGender(),null),HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    output,null),HttpStatus.OK);
+        }
     }
+    @DeleteMapping(path="/deletepos/{pos}")
+    public ResponseEntity<ResponseDTO> deleteInPos(@PathVariable int pos){
+        String output = listaSEService.deletePos(pos);
 
-
-    //Delete pos#8
-   @DeleteMapping(path="/deletepos/{posicion}")
-   public ResponseEntity<ResponseDTO> deleteInPos(@PathVariable int posicion){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.deletePos(posicion),null),HttpStatus.OK);
-   }
-
-
-
-   //Delete Id #9
-    @DeleteMapping(path="/deleteid/{identification}")
-    public  ResponseEntity<ResponseDTO> deleteid(@PathVariable String identification) {
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.deleteId(identification),null),HttpStatus.OK);
+        if (output.equals("La posición está fuera de rango.")){
+            List<String> errors = new ArrayList<>();
+            errors.add(output);
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.BAD_REQUEST.value(),
+                    null,errors),HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    output,null),HttpStatus.OK);
+        }
     }
+    @DeleteMapping(path="/deleteid/{id}")
+    public  ResponseEntity<ResponseDTO> deleteId(@PathVariable String id) {
+        String output=listaSEService.deleteId(id);
+        if (output.equals("Insertado")){
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    output,null),HttpStatus.OK);
+        }else {
+            List<String> errors = new ArrayList<>();
+            errors.add(output);
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.NO_CONTENT.value(),
+                    null,errors),HttpStatus.OK);
+        }
 
-
-    //Update in Pos #10
+    }
     @PutMapping(path="/updateinpos/{posicion}")
-    public ResponseEntity<ResponseDTO> updateInPos(@PathVariable int posicion,@RequestBody Kid kid){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listSEService.updateInPos(posicion, kid),null),HttpStatus.OK);
+    public ResponseEntity<String> updateInPos(@PathVariable int posicion,@Valid @RequestBody Kid kid){
+        listaSEService.getKids().updateInPos(posicion,kid);
+        return new ResponseEntity<String>(
+                "actualizado exitosamente", HttpStatus.OK);
     }
+
+    @GetMapping(path = "/report")
+    public ResponseEntity<ResponseDTO> cityReport(){
+        Object output = null;
+        try {
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    listaSEService.getKids().cityReport(), null),HttpStatus.OK);
+        } catch (KidsException e) {
+            List<String> errors = new ArrayList<>();
+            errors.add(e.getMessage());
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.NO_CONTENT.value(),
+                    null,errors),HttpStatus.OK);
+
+        }
+    }
+
+    @GetMapping(path="/getcities")
+    public ResponseEntity<ResponseDTO> getCities(){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listaSEService.getKids().getCities(), null),HttpStatus.OK);
+    }
+
 
 }
