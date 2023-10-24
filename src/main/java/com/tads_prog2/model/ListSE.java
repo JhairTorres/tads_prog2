@@ -36,6 +36,7 @@ public class ListSE {
 
         }
         this.size++;
+        System.out.println("Nuevo valor de largo:  "+this.size);
     }
 
     //ADD TO START
@@ -48,6 +49,7 @@ public class ListSE {
             this.head=newNode;
         }
         this.size ++;
+
     }
     //ADD TO POSITION
     public void addPos(int posicion, Kid kid) {
