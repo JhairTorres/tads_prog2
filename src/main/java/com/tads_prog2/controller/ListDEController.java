@@ -33,7 +33,7 @@ public class ListDEController {
         }
     }
 
-    @PostMapping
+    @PostMapping(path="/addend")
     public ResponseEntity<String> addEnd(@Valid @RequestBody Kid kid){
         // Aquí irían las validaciones de la entrada
         listDEService.getKids().addKidToEndDE(kid);
@@ -113,7 +113,7 @@ public class ListDEController {
                     null, errors), HttpStatus.OK);
         }
     }
-    @DeleteMapping(path="/deletekamikaze/{pos}")
+    @DeleteMapping(path="/kamikaze/{pos}")
     public ResponseEntity<ResponseDTO> deleteKamikaze(@PathVariable int pos){
         String output = listDEService.deleteKamikaze(pos);
         if(output.equals("Kamikazeeeee")){

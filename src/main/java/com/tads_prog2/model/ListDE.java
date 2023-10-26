@@ -15,19 +15,21 @@ public class ListDE {
     private int size;
 
     // Agregar al final
-    public void addKidToEndDE(Kid kid) {
-        if (this.head == null) {
-            this.head = new NodeDE(kid);
+    public void addKidToEndDE(Kid newkid){
+        NodeDE newNode = new NodeDE(newkid);
+        if(this.head==null){
+            this.head =newNode;
         } else {
-            NodeDE tempNode = this.head;
-            while (tempNode.getNext() != null) {
-                tempNode = tempNode.getNext();
+            NodeDE temp = this.head;
+            while(temp.getNext()!=null){
+                temp = temp.getNext();
             }
-            NodeDE newNode = new NodeDE(kid);
-            tempNode.setNext(newNode);
-            newNode.setPrevious(tempNode);
+            temp.setNext(newNode);
+            newNode.setPrevious(temp);
         }
         this.size++;
+
+
     }
     // Agregar al principio
     public void addToStartDE(Kid kid) {
@@ -47,8 +49,10 @@ public class ListDE {
     public void addPosDE(int posicion, Kid kid) {
         if (posicion == 1) {
             this.addToStartDE(kid);
+
         } else if (posicion > this.size) {
             this.addKidToEndDE(kid);
+
         } else if (posicion <= this.size) {
             NodeDE temp = this.head;
             int posAct = 1;
@@ -57,12 +61,13 @@ public class ListDE {
                 posAct++;
             }
             NodeDE newNode = new NodeDE(kid);
+            temp.getNext().setPrevious(newNode);
+            newNode.setNext(temp.getNext());
             newNode.setPrevious(temp);
-            newNode.setNext(temp.getPrevious());
-            temp.getPrevious().setNext(newNode);
-            temp.setPrevious(newNode);
+            temp.setNext(newNode);
             this.size++;
         }
+
     }
 
     // Invertir la lista
