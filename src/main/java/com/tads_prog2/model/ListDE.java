@@ -20,12 +20,12 @@ public class ListDE {
             this.head = new NodeDE(kid);
         } else {
             NodeDE tempNode = this.head;
-            while (tempNode.getPrevious() != null) {
-                tempNode = tempNode.getPrevious();
+            while (tempNode.getNext() != null) {
+                tempNode = tempNode.getNext();
             }
             NodeDE newNode = new NodeDE(kid);
-            newNode.setNext(tempNode);
-            tempNode.setPrevious(newNode);
+            tempNode.setNext(newNode);
+            newNode.setPrevious(tempNode);
         }
         this.size++;
     }
@@ -35,9 +35,10 @@ public class ListDE {
             this.head = new NodeDE(kid);
         } else {
             NodeDE newNode = new NodeDE(kid);
-            newNode.setPrevious(this.head);
-            this.head.setNext(newNode);
-            this.head = newNode;
+            newNode.setNext(this.head);
+            newNode.setPrevious(newNode);
+            this.head.setPrevious(newNode);
+            this.head=newNode;
         }
         this.size++;
     }
@@ -52,7 +53,7 @@ public class ListDE {
             NodeDE temp = this.head;
             int posAct = 1;
             while (posAct < posicion - 1) {
-                temp = temp.getPrevious();
+                temp = temp.getNext();
                 posAct++;
             }
             NodeDE newNode = new NodeDE(kid);
@@ -67,14 +68,13 @@ public class ListDE {
     // Invertir la lista
     public void invertDE() {
         if (this.head != null) {
+            ListDE listcopy = new ListDE();
             NodeDE temp = this.head;
             while (temp != null) {
-                NodeDE nextNode = temp.getNext();
-                temp.setNext(temp.getPrevious());
-                temp.setPrevious(nextNode);
-                temp = nextNode;
+                listcopy.addToStartDE(temp.getData());
+                temp = temp.getNext();
             }
-            this.head = temp.getPrevious();
+            this.head = listcopy.getHead();
         }
     }
 
@@ -83,8 +83,8 @@ public class ListDE {
         if (this.head != null && this.size > 1) {
             NodeDE firstNode = this.head;
             NodeDE lastNode = this.head;
-            while (lastNode.getPrevious() != null) {
-                lastNode = lastNode.getPrevious();
+            while (lastNode.getNext() != null) {
+                lastNode = lastNode.getNext();
             }
             Kid tempKid = firstNode.getData();
             firstNode.setData(lastNode.getData());
@@ -96,19 +96,21 @@ public class ListDE {
     public void sortbyGenderDE() throws KidsException {
         if (this.head == null) {
             throw new KidsException("Lista vacia");
-        } else if (this.head.getPrevious() == null) {
+        } else if (this.head.getNext() == null) {
             throw new KidsException("Insuficientes elementos");
         } else {
             ListDE sortedList = new ListDE();
             NodeDE temp = this.head;
+            int posmale=1;
+            int posfemale=2;
 
             while (temp != null) {
                 if (temp.getData().getGender().equals("Male")) {
-                    sortedList.addKidToEndDE(temp.getData());
+                    sortedList.addPosDE(posmale,temp.getData());
                 } else if (temp.getData().getGender().equals("Female")) {
-                    sortedList.addToStartDE(temp.getData());
+                    sortedList.addPosDE(posfemale,temp.getData());
                 }
-                temp = temp.getPrevious();
+                temp = temp.getNext();
             }
 
             this.head = sortedList.getHead();
@@ -122,23 +124,23 @@ public class ListDE {
         }
 
         if (posicion == 1) {
-            this.head = this.head.getPrevious();
-            this.head.setNext(null);
+            this.head = this.head.getNext();
+            this.head.setPrevious(null);
         } else {
             NodeDE temp = this.head;
             int contador = 1;
 
             while (contador < posicion) {
-                temp = temp.getPrevious();
+                temp = temp.getNext();
                 contador++;
             }
 
             NodeDE prevNode = temp.getPrevious();
             NodeDE nextNode = temp.getNext();
-            prevNode.setPrevious(nextNode);
+            prevNode.setNext(nextNode);
 
             if (nextNode != null) {
-                nextNode.setNext(prevNode);
+                nextNode.setPrevious(prevNode);
             }
         }
 
@@ -146,105 +148,29 @@ public class ListDE {
     }
 
     // Eliminar por identificación
-    public void deleteIdDE(String id) throws KidsException {
-        if (this.head == null) {
-            throw new KidsException("Lista Vacia");
-        } else {
+    public void deleteIdDE(String id) throws KidsException{
+        if(this.head==null){
+            throw new KidsException("Lista vacia");
+        } else if (this.head.getData().getIdentification().equals(id)) {
+            //Nueva cabeza
+            this.head = this.head.getNext();
+            this.head.setPrevious(null);
+            this.size--;
+        }
+        else{
             NodeDE temp = this.head;
-
-            while (temp != null) {
+            while(temp!=null) {
                 if (temp.getData().getIdentification().equals(id)) {
-                    NodeDE prevNode = temp.getPrevious();
-                    NodeDE nextNode = temp.getNext();
-
-                    if (prevNode != null) {
-                        prevNode.setPrevious(nextNode);
-                    } else {
-                        this.head = nextNode;
-                    }
-
-                    if (nextNode != null) {
-                        nextNode.setNext(prevNode);
-                    }
-
-                    this.size--;
+                    NodeDE previous = temp.getPrevious();
+                    previous.setNext(temp.getNext());
+                    temp.getNext().setPrevious(previous);
                 }
-                temp = temp.getPrevious();
+                temp = temp.getNext();
             }
+            this.size--;
         }
     }
 
-    // Actualizar en una posición
-    public void updateInPosDE(int posicion, Kid kid) {
-        if (this.head != null && posicion > 0 && posicion <= this.size) {
-            NodeDE temp = this.head;
-            int currentPos = 1;
-
-            while (currentPos < posicion) {
-                temp = temp.getPrevious();
-                currentPos++;
-            }
-
-            temp.setData(kid);
-        }
-    }
-
-    // Obtener las ciudades
-    public List<String> getCitiesDE() {
-        NodeDE temp = this.head;
-        List<String> cities = new ArrayList<>();
-
-        while (temp != null) {
-            String city = temp.getData().getCityname().getCity();
-            if (!cities.contains(city)) {
-                cities.add(city);
-            }
-            temp = temp.getPrevious();
-        }
-
-        return cities;
-    }
-
-    // Generar un informe de ciudades
-    public List<DataStructureDTO> cityReportDE() throws KidsException {
-        if (this.head == null) {
-            throw new KidsException("Lista vacía");
-        } else {
-            List<String> cities = this.getCitiesDE();
-            List<DataStructureDTO> citiesReport = new ArrayList<>();
-
-            for (String city : cities) {
-                int totalCityCount = 0;
-                int maleCount = 0;
-                int femaleCount = 0;
-                NodeDE temp = this.head;
-
-                while (temp != null) {
-                    if (temp.getData().getCityname().getCity().equals(city)) {
-                        if (temp.getData().getGender().equals("Male")) {
-                            maleCount++;
-                        } else if (temp.getData().getGender().equals("Female")) {
-                            femaleCount++;
-                        }
-                        totalCityCount++;
-                    }
-                    temp = temp.getPrevious();
-                }
-
-                GenderStructureDTO cityFemales = new GenderStructureDTO("Female", femaleCount);
-                GenderStructureDTO cityMales = new GenderStructureDTO("Males", maleCount);
-
-                List<GenderStructureDTO> genders = new ArrayList<>();
-                genders.add(cityFemales);
-                genders.add(cityMales);
-
-                DataStructureDTO finalCityReport = new DataStructureDTO(city, totalCityCount, genders);
-                citiesReport.add(finalCityReport);
-            }
-
-            return citiesReport;
-        }
-    }
     public List<Kid> getAll() throws KidsException{
         if (this.head==null){
             throw new KidsException("Lista vacia");
@@ -258,5 +184,28 @@ public class ListDE {
             return kids;
         }
     }
+    public void deleteKamikaze(int pos) throws KidsException {
+        if (pos <= 0 || pos > this.size) {
+            throw new KidsException("Fuera de rango");
+        }
+        if (pos == 1) {
+            this.head = this.head.getNext();
+            this.head.setPrevious(null);
+        } else {
+            NodeDE temp = this.head;
+            int cont = 1;
+
+            while (cont!=pos) {
+                temp = temp.getNext();
+                cont++;
+            }
+            NodeDE previous = temp.getPrevious();
+            temp.setPrevious(null);
+            previous.setNext(temp.getNext());
+        }
+
+        this.size--;
+    }
 }
+
 

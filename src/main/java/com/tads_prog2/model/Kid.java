@@ -20,5 +20,4 @@ public class Kid {
     private String gender;
     @Valid
     private City cityname;
-
 }

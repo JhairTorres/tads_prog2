@@ -24,9 +24,8 @@ public class ListDEService {
         kids.addKidToEndDE(new Kid("1008", "Sebastian Rugeles", (byte) 19,"Male",new City("17001","Manizales")));
 
     }
-    public ListDE getAll() throws KidsException {
-        kids.getAll();
-        return kids;
+    public List<Kid> getAll() throws KidsException {
+        return kids.getAll();
     }
     public String invertDE() {
         kids.invertDE();
@@ -52,10 +51,7 @@ public class ListDEService {
         return "Agregado";
     }
 
-    public String updateInPosDE(int pos, Kid kid) {
-        kids.updateInPosDE(pos, kid);
-        return "Actualizado";
-    }
+
 
     public String deletePosDE(int pos) {
         try {
@@ -74,16 +70,14 @@ public class ListDEService {
             return e.getMessage();
         }
     }
-
-    public List<DataStructureDTO> cityReportDE() throws KidsException {
+    public String deleteKamikaze(int pos){
         try {
-            return kids.cityReportDE();
+            kids.deleteKamikaze(pos);
+            return "Kamikazeeeee";
         } catch (KidsException e) {
-            throw new KidsException(e.getMessage());
+            return e.getMessage();
         }
     }
 
-    public List<String> getCitiesDE() {
-        return kids.getCitiesDE();
-    }
+
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class NodeDE {
-    @JsonManagedReference
     private Kid data;
     private NodeDE next;
     private NodeDE previous;

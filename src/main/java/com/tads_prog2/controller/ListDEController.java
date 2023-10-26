@@ -19,14 +19,18 @@ import java.util.List;
 public class ListDEController {
     @Autowired
     private ListDEService listDEService;
-    @Autowired
-    private ListSEService listSEService;
 
     @GetMapping
-    public ResponseEntity<NodeDE> getAll(){
-        return new ResponseEntity<NodeDE>(
-                listDEService.getKids().getHead(),HttpStatus.OK
-        );
+    public ResponseEntity<ResponseDTO> getAll(){
+        try {
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    listDEService.getAll(),null),HttpStatus.OK);
+        } catch (KidsException e) {
+            List<String> errors = new ArrayList<>();
+            errors.add(e.getMessage());
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    null,errors),HttpStatus.OK);
+        }
     }
 
     @PostMapping
@@ -85,7 +89,6 @@ public class ListDEController {
     @DeleteMapping(path="/deletepos/{pos}")
     public ResponseEntity<ResponseDTO> deleteInPos(@PathVariable int pos){
         String output = listDEService.deletePosDE(pos);
-
         if (output.equals("La posición está fuera de rango.")) {
             List<String> errors = new ArrayList<>();
             errors.add(output);
@@ -110,31 +113,23 @@ public class ListDEController {
                     null, errors), HttpStatus.OK);
         }
     }
-
-    @PutMapping(path="/updateinpos/{posicion}")
-    public ResponseEntity<String> updateInPos(@PathVariable int posicion, @Valid @RequestBody Kid kid){
-        listDEService.getKids().updateInPosDE(posicion, kid);
-        return new ResponseEntity<String>(
-                "Actualizado exitosamente", HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/report")
-    public ResponseEntity<ResponseDTO> cityReport(){
-        try {
+    @DeleteMapping(path="/deletekamikaze/{pos}")
+    public ResponseEntity<ResponseDTO> deleteKamikaze(@PathVariable int pos){
+        String output = listDEService.deleteKamikaze(pos);
+        if(output.equals("Kamikazeeeee")){
             return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                    listDEService.getKids().cityReportDE(), null), HttpStatus.OK);
-        } catch (KidsException e) {
+                    output,null),HttpStatus.OK);
+        }
+        else {
             List<String> errors = new ArrayList<>();
-            errors.add(e.getMessage());
-            return new ResponseEntity<>(new ResponseDTO(HttpStatus.NO_CONTENT.value(),
-                    null, errors), HttpStatus.OK);
+            errors.add(output);
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.BAD_REQUEST.value(),
+                    null,errors),HttpStatus.OK);
         }
     }
 
-    @GetMapping(path="/getcities")
-    public ResponseEntity<ResponseDTO> getCities(){
-        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                listDEService.getKids().getCitiesDE(), null), HttpStatus.OK);
-    }
+
+
+
 }
 
