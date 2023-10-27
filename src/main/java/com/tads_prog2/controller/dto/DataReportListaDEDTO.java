@@ -7,10 +7,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @Data
-public class DataStructureDTO {
-    private String City;
-    private int quantity;
-    private List<CityStructureDTO> gender;
+public class DataReportListaDEDTO {
+    private String gender;
+    private List<CityStructureDTO> city;
+
+    private int total;
 
 
 }

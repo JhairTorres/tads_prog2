@@ -3,14 +3,12 @@ package com.tads_prog2.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.List;
 
+import java.util.List;
 @AllArgsConstructor
 @Data
-public class DataStructureDTO {
-    private String City;
+public class GenderStructureListDEDTO {
+    private String gender;
+    private List<SiblingStructureListDEDTO> siblingStatus;
     private int quantity;
-    private List<CityStructureDTO> gender;
-
-
 }

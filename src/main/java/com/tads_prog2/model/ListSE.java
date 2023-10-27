@@ -1,7 +1,7 @@
 package com.tads_prog2.model;
 
 import com.tads_prog2.controller.dto.DataStructureDTO;
-import com.tads_prog2.controller.dto.GenderStructureDTO;
+import com.tads_prog2.controller.dto.CityStructureDTO;
 import com.tads_prog2.exceptions.KidsException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -252,12 +252,12 @@ public class ListSE {
 
                     temp = temp.getNext();
                 }
-                GenderStructureDTO city_females = new GenderStructureDTO("Female",female_count);
-                GenderStructureDTO city_males = new GenderStructureDTO("Males",male_count);
+                CityStructureDTO city_females = new CityStructureDTO("Female",female_count);
+                CityStructureDTO city_males = new CityStructureDTO("Males",male_count);
                 System.out.println(city+"Females in the city  "+ city_females);
                 System.out.println(city+"Males in the city  "+city_males);
 
-                List<GenderStructureDTO> genders = new ArrayList<>();
+                List<CityStructureDTO> genders = new ArrayList<>();
                 genders.add(city_females);
                 genders.add(city_males);
 

@@ -1,27 +1,29 @@
 package com.tads_prog2.model;
 
-import com.tads_prog2.controller.dto.DataStructureDTO;
-import com.tads_prog2.controller.dto.GenderStructureDTO;
+import com.tads_prog2.controller.dto.*;
 import com.tads_prog2.exceptions.KidsException;
 import lombok.Data;
 import com.tads_prog2.model.NodeDE;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ListDE {
     private NodeDE head;
     private int size;
+    private List<String> Cities;
 
     // Agregar al final
-    public void addKidToEndDE(Kid newkid){
+    public void addKidToEndDE(Kid newkid) {
         NodeDE newNode = new NodeDE(newkid);
-        if(this.head==null){
-            this.head =newNode;
+        if (this.head == null) {
+            this.head = newNode;
         } else {
             NodeDE temp = this.head;
-            while(temp.getNext()!=null){
+            while (temp.getNext() != null) {
                 temp = temp.getNext();
             }
             temp.setNext(newNode);
@@ -31,6 +33,7 @@ public class ListDE {
 
 
     }
+
     // Agregar al principio
     public void addToStartDE(Kid kid) {
         if (this.head == null) {
@@ -40,7 +43,7 @@ public class ListDE {
             newNode.setNext(this.head);
             newNode.setPrevious(newNode);
             this.head.setPrevious(newNode);
-            this.head=newNode;
+            this.head = newNode;
         }
         this.size++;
     }
@@ -106,14 +109,14 @@ public class ListDE {
         } else {
             ListDE sortedList = new ListDE();
             NodeDE temp = this.head;
-            int posmale=1;
-            int posfemale=2;
+            int posmale = 1;
+            int posfemale = 2;
 
             while (temp != null) {
                 if (temp.getData().getGender().equals("Male")) {
-                    sortedList.addPosDE(posmale,temp.getData());
+                    sortedList.addPosDE(posmale, temp.getData());
                 } else if (temp.getData().getGender().equals("Female")) {
-                    sortedList.addPosDE(posfemale,temp.getData());
+                    sortedList.addPosDE(posfemale, temp.getData());
                 }
                 temp = temp.getNext();
             }
@@ -153,42 +156,50 @@ public class ListDE {
     }
 
     // Eliminar por identificación
-    public void deleteIdDE(String id) throws KidsException{
-        if(this.head==null){
-            throw new KidsException("Lista vacia");
+    public void deleteIdDE(String id) throws KidsException {
+        if (this.head == null) {
+            throw new KidsException("Lista vacía");
         } else if (this.head.getData().getIdentification().equals(id)) {
-            //Nueva cabeza
+            // El nodo a eliminar es el primer nodo
             this.head = this.head.getNext();
-            this.head.setPrevious(null);
+            if (this.head != null) {
+                // Asegurarse de que la nueva cabeza tenga su puntero "previous" a null
+                this.head.setPrevious(null);
+            }
             this.size--;
-        }
-        else{
+        } else {
             NodeDE temp = this.head;
-            while(temp!=null) {
+            while (temp != null) {
                 if (temp.getData().getIdentification().equals(id)) {
                     NodeDE previous = temp.getPrevious();
-                    previous.setNext(temp.getNext());
-                    temp.getNext().setPrevious(previous);
+                    NodeDE nextNode = temp.getNext();
+                    previous.setNext(nextNode);
+                    if (nextNode != null) {
+                        // Asegurarse de que el nodo siguiente tenga su puntero "previous" actualizado
+                        nextNode.setPrevious(previous);
+                    }
+                    this.size--;
+                    break; // Importante para evitar eliminar múltiples nodos con el mismo ID
                 }
                 temp = temp.getNext();
             }
-            this.size--;
         }
     }
 
-    public List<Kid> getAll() throws KidsException{
-        if (this.head==null){
+    public List<Kid> getAll() throws KidsException {
+        if (this.head == null) {
             throw new KidsException("Lista vacia");
-        }else {
-            List<Kid>kids = new ArrayList<>();
-            NodeDE temp= this.head;
-            while (temp!=null){
+        } else {
+            List<Kid> kids = new ArrayList<>();
+            NodeDE temp = this.head;
+            while (temp != null) {
                 kids.add(temp.getData());
-                temp= temp.getNext();
+                temp = temp.getNext();
             }
             return kids;
         }
     }
+
     public void deleteKamikaze(int pos) throws KidsException {
         if (pos <= 0 || pos > this.size) {
             throw new KidsException("Fuera de rango");
@@ -200,17 +211,94 @@ public class ListDE {
             NodeDE temp = this.head;
             int cont = 1;
 
-            while (cont!=pos) {
+            while (cont != pos) {
                 temp = temp.getNext();
                 cont++;
             }
             NodeDE previous = temp.getPrevious();
-            temp.setPrevious(null);
-            previous.setNext(temp.getNext());
+            NodeDE nextNode = temp.getNext();
+            previous.setNext(nextNode);
+            if (nextNode != null) {
+                nextNode.setPrevious(previous);
+            }
         }
 
         this.size--;
     }
+    public List<String> getgender() {
+        NodeDE temp = this.head;
+        List<String> genders = new ArrayList<>();
+
+        while (temp != null) {
+            String gender = String.valueOf(temp.getData().getGender());
+            if (!genders.contains(genders)) {
+                genders.add(gender);
+            }
+            temp = temp.getNext();
+        }
+
+        return genders;
+    }
+
+
+    public List<DataReportListaDEDTO> BrothersReport() throws KidsException {
+        if (this.head == null) {
+            throw new KidsException("Lista vacía");
+        } else {
+            List<String> genders = this.getgender();
+            List<DataReportListaDEDTO> finalReport = new ArrayList<>();
+
+            for (String gender : genders) {
+                int totalCityCount = 0; // CUENTA EL TOTAL DE PERSONAS EN LA CIUDAD
+                int maleCount = 0; // CUENTA LOS HOMBRES EN ESCUELAS
+                int femaleCount = 0; // CUENTA LAS MUJERES EN ESCUELAS
+                int siHermanosHombres = 0;
+                int siHermanosMujeres = 0;
+                NodeDE temp = this.head;
+
+                while (temp != null) {
+                    if (temp.getData().getGender().equals("male")) {
+                        if (temp.getData().getCityname().getCity().equals("city")) {
+                            if (temp.getData().getBrothers().equals("si")) {
+                                siHermanosHombres++;
+                            }
+                            totalCityCount++;
+                            maleCount++;
+                        }
+                    } else if (temp.getData().getGender().equals("female")) {
+                        if (temp.getData().getCityname().getCity().equals("city")) {
+                            if (temp.getData().getBrothers().equals("si")) {
+                                siHermanosMujeres++;
+                            }
+                            totalCityCount++;
+                            femaleCount++;
+                        }
+                    }
+                    temp = temp.getNext();
+                }
+
+                // Lista de hermanos para hombres
+                List<SiblingStructureListDEDTO> brothersMales = new ArrayList<>();
+                brothersMales.add(new SiblingStructureListDEDTO("Hay hermanos", siHermanosHombres));
+
+                // Lista de hermanos para mujeres
+                List<SiblingStructureListDEDTO> brothersFemales = new ArrayList<>();
+                brothersFemales.add(new SiblingStructureListDEDTO(femaleCount,siHermanosMujeres));
+
+                // Divide por género
+                List<CityStructureDTO> city = new ArrayList<>();
+                city.add(new CityStructureDTO("Male", brothersMales, maleCount));
+                city.add(new CityStructureDTO("Female", brothersFemales, femaleCount));
+
+                // Objeto para el informe final
+                finalReport.add(new DataReportListaDEDTO(gender, city,totalCityCount));
+            }
+
+            return finalReport;
+        }
+    }
+
+
 }
 
 

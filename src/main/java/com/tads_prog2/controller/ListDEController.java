@@ -2,10 +2,7 @@ package com.tads_prog2.controller;
 import com.tads_prog2.controller.dto.ResponseDTO;
 import com.tads_prog2.exceptions.KidsException;
 import com.tads_prog2.model.Kid;
-import com.tads_prog2.model.Node;
-import com.tads_prog2.model.NodeDE;
 import com.tads_prog2.service.ListDEService;
-import com.tads_prog2.service.ListSEService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -127,8 +124,20 @@ public class ListDEController {
                     null,errors),HttpStatus.OK);
         }
     }
+    @GetMapping(path = "/reportde")
+    public ResponseEntity<ResponseDTO> SchoolReport(){
+        Object output = null;
+        try {
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                    listDEService.cityReportDE(),null),HttpStatus.OK);
+        } catch (KidsException e) {
+            List<String> errors = new ArrayList<>();
+            errors.add(e.getMessage());
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.NO_CONTENT.value(),
+                    null,errors),HttpStatus.OK);
 
-
+        }
+    }
 
 
 }

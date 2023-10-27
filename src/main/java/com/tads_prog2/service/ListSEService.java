@@ -3,6 +3,7 @@ package com.tads_prog2.service;
 import com.tads_prog2.controller.dto.DataStructureDTO;
 import com.tads_prog2.exceptions.KidsException;
 import com.tads_prog2.model.City;
+import com.tads_prog2.model.Gender;
 import com.tads_prog2.model.Kid;
 import com.tads_prog2.model.ListSE;
 import lombok.Data;
@@ -18,12 +19,16 @@ public class ListSEService {
     public ListSEService() {
         //Simular que leyo un archivo o una base de datos
         kids = new ListSE();
-        kids.addKidToEnd(new Kid("1006", "Valeria Osorio", (byte) 20,"Female",new City("17001","Manizales")));
-        kids.addKidToEnd(new Kid("1007", "Jhair Torres", (byte)18 ,"Male",new City("05001","Medellin")));
-        kids.addKidToEnd(new Kid("1003", "John Jaime", (byte) 18,"Male",new City("05091","Betania")));
-        kids.addKidToEnd(new Kid("1004", "Sergio Nuñez", (byte) 19,"Male",new City("11001","Bogota")));
-        kids.addKidToEnd(new Kid("1008", "Sebastian Rugeles", (byte) 19,"Male",new City("17001","Manizales")));
-
+        kids.addKidToEnd(new Kid("1006", "Valeria Osorio", (byte) 20,new Gender("female"),new City("17001","Manizales")
+                ,"si"));
+        kids.addKidToEnd(new Kid("1007", "Jhair Torres", (byte)18 ,new Gender("male"),new City("05001","Medellin"),
+                "no"));
+        kids.addKidToEnd(new Kid("1003", "John Jaime", (byte) 18,new Gender("male"),new City("05091","Betania"),
+                "si"));
+        kids.addKidToEnd(new Kid("1004", "Sergio Nuñez", (byte) 19,new Gender("male"),new City("11001","Bogota"),
+                "no"));
+        kids.addKidToEnd(new Kid("1008", "Sebastian Rugeles", (byte) 19,new Gender("male"),new City("17001","Manizales"),
+                "no"));
     }
 
     public String invert(){
