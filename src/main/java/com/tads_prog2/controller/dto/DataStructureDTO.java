@@ -10,7 +10,7 @@ import java.util.List;
 public class DataStructureDTO {
     private String City;
     private int quantity;
-    private List<CityStructureDTO> gender;
+    private List<GenderStructureDTO> gender;
 
 
 }

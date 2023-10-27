@@ -124,19 +124,23 @@ public class ListDEController {
                     null,errors),HttpStatus.OK);
         }
     }
-    @GetMapping(path = "/reportde")
-    public ResponseEntity<ResponseDTO> SchoolReport(){
-        Object output = null;
+    @GetMapping(path="/jhairreport")
+    public ResponseEntity<ResponseDTO> jhairReport(){
         try {
             return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
-                    listDEService.cityReportDE(),null),HttpStatus.OK);
+                    listDEService.jhair(),null),HttpStatus.OK);
         } catch (KidsException e) {
             List<String> errors = new ArrayList<>();
             errors.add(e.getMessage());
-            return new ResponseEntity<>(new ResponseDTO(HttpStatus.NO_CONTENT.value(),
-                    null,errors),HttpStatus.OK);
 
+            return new ResponseEntity<>(new ResponseDTO(HttpStatus.BAD_REQUEST.value(),
+                    null,errors),HttpStatus.OK);
         }
+    }
+    @GetMapping(path="/getcities")
+    public ResponseEntity<ResponseDTO> getCities(){
+        return new ResponseEntity<>(new ResponseDTO(HttpStatus.OK.value(),
+                listDEService.getCities(),null),HttpStatus.OK);
     }
 
 

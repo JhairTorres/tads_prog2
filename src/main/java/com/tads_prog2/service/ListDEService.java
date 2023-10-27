@@ -1,7 +1,6 @@
 package com.tads_prog2.service;
 
 import com.tads_prog2.controller.dto.DataReportListaDEDTO;
-import com.tads_prog2.controller.dto.DataStructureDTO;
 import com.tads_prog2.exceptions.KidsException;
 import com.tads_prog2.model.City;
 import com.tads_prog2.model.Gender;
@@ -20,16 +19,16 @@ public class ListDEService {
     public ListDEService() {
         //Simular que leyo un archivo o una base de datos
         kids = new ListDE();
-        kids.addKidToEndDE(new Kid("1006", "Valeria Osorio", (byte) 20,new Gender("female"), new City("17001", "Manizales")
-                , "si"));
-        kids.addKidToEndDE(new Kid("1007", "Jhair Torres", (byte) 18, new Gender("male"), new City("05001", "Medellin"),
-                "no"));
-        kids.addKidToEndDE(new Kid("1003", "John Jaime", (byte) 18, new Gender("male"), new City("05091", "Betania"),
-                "si"));
-        kids.addKidToEndDE(new Kid("1004", "Sergio Nuñez", (byte) 19, new Gender("male"), new City("11001", "Bogota"),
-                "no"));
-        kids.addKidToEndDE(new Kid("1008", "Sebastian Rugeles", (byte) 19, new Gender("male"), new City("17001", "Manizales"),
-                "si"));
+        kids.addKidToEndDE(new Kid("1006", "Valeria Osorio", (byte) 20,"female", new City("17001", "Manizales")
+                , 3));
+        kids.addKidToEndDE(new Kid("1007", "Jhair Torres", (byte) 18, "male", new City("05001", "Medellin"),
+                0));
+        kids.addKidToEndDE(new Kid("1003", "John Jaime", (byte) 18,"male", new City("05091", "Betania"),
+                2));
+        kids.addKidToEndDE(new Kid("1004", "Sergio Nuñez", (byte) 19, "male", new City("11001", "Bogota"),
+                0));
+        kids.addKidToEndDE(new Kid("1008", "Sebastian Rugeles", (byte) 19, "male", new City("17001", "Manizales"),
+                1));
 
     }
 
@@ -89,16 +88,15 @@ public class ListDEService {
         }
     }
 
-    public List<DataReportListaDEDTO> cityReportDE() throws KidsException {
+    public List<String> getCities() {
+        return kids.getCities();
+    }
+    public List<DataReportListaDEDTO> jhair()throws KidsException{
         try {
             return kids.BrothersReport();
         } catch (KidsException e) {
-            throw new KidsException(e.getMessage());
+            throw new KidsException((e.getMessage()));
         }
-    }
-
-    public List<String> getgender() {
-        return kids.getgender();
     }
 }
 

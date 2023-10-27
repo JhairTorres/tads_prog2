@@ -15,10 +15,10 @@ public class Kid {
     @Max(25)
     private byte age;
     @NotEmpty
-    private Gender gender;
+    private String gender;
     @Valid
     private City cityname;
-    private String brothers;
+    private int brothers;
 
 
 

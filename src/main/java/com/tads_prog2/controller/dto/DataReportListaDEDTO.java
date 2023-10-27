@@ -5,13 +5,11 @@ import lombok.Data;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class DataReportListaDEDTO {
     private String gender;
-    private List<CityStructureDTO> city;
-
-    private int total;
-
+    private List<CityStructureDEDTO> cities;
+    private int quantity;
 
 }

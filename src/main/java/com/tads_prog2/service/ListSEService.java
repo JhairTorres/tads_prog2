@@ -19,16 +19,16 @@ public class ListSEService {
     public ListSEService() {
         //Simular que leyo un archivo o una base de datos
         kids = new ListSE();
-        kids.addKidToEnd(new Kid("1006", "Valeria Osorio", (byte) 20,new Gender("female"),new City("17001","Manizales")
-                ,"si"));
-        kids.addKidToEnd(new Kid("1007", "Jhair Torres", (byte)18 ,new Gender("male"),new City("05001","Medellin"),
-                "no"));
-        kids.addKidToEnd(new Kid("1003", "John Jaime", (byte) 18,new Gender("male"),new City("05091","Betania"),
-                "si"));
-        kids.addKidToEnd(new Kid("1004", "Sergio Nuñez", (byte) 19,new Gender("male"),new City("11001","Bogota"),
-                "no"));
-        kids.addKidToEnd(new Kid("1008", "Sebastian Rugeles", (byte) 19,new Gender("male"),new City("17001","Manizales"),
-                "no"));
+        kids.addKidToEnd(new Kid("1006", "Valeria Osorio", (byte) 20,"female",new City("17001","Manizales")
+                ,1));
+        kids.addKidToEnd(new Kid("1007", "Jhair Torres", (byte)18 ,"male",new City("05001","Medellin"),
+                2));
+        kids.addKidToEnd(new Kid("1003", "John Jaime", (byte) 18,"male",new City("05091","Betania"),
+                3));
+        kids.addKidToEnd(new Kid("1004", "Sergio Nuñez", (byte) 19,"male",new City("11001","Bogota"),
+                0));
+        kids.addKidToEnd(new Kid("1008", "Sebastian Rugeles", (byte) 19,"male",new City("17001","Manizales"),
+                2));
     }
 
     public String invert(){
